@@ -1,7 +1,6 @@
 # Kiungo: URL shortener with analytics, API and subscriptions
 
-*Kiungo* is Swahili for "link". This is a full SaaS URL shortener, similar in spirit to Short.io or Bitly, built for
-SMS, WhatsApp and social campaigns.
+*Kiungo* is Swahili for "link". This is a full SaaS URL shortener, built for SMS, WhatsApp and social campaigns.
 
 | | |
 |---|---|
@@ -10,7 +9,7 @@ SMS, WhatsApp and social campaigns.
 | **API docs** | OpenAPI / Swagger UI at `/swagger-ui.html` |
 | **Deploy** | Docker, Docker Compose, Caddy (automatic HTTPS), GitHub Actions CI |
 
-## What works today (v0.1)
+## What works now (v0.1)
 
 - Sign up and sign in, with a **14-day Pro trial** for every new account. The account then drops to Free unless the user subscribes.
 - Shorten links with random or custom slugs, titles, tags, a **UTM builder**, **expiry dates**, **click limits**, and **iOS/Android targeting** to send phones to the right app store.
