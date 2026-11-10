@@ -1,0 +1,4 @@
+{
+  "files.exclude": { "**/node_modules": true, "**/target": true, "**/.angular": true },
+  "java.configuration.updateBuildConfiguration": "automatic"
+}

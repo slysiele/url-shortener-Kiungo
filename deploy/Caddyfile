@@ -1,0 +1,9 @@
+# Caddy gets and renews HTTPS certificates automatically.
+{$APP_DOMAIN} {
+	encode gzip
+	reverse_proxy frontend:80
+}
+
+{$SHORT_DOMAIN} {
+	reverse_proxy backend:8080
+}

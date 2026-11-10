@@ -1,0 +1,49 @@
+# Production on a single VPS. See docs/DEPLOYMENT.md.
+#   cp deploy/.env.example deploy/.env  (fill it in)
+#   docker compose -f deploy/docker-compose.prod.yml --env-file deploy/.env up -d --build
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: kiungo
+      POSTGRES_USER: kiungo
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: ../backend
+    restart: unless-stopped
+    depends_on: [db]
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DATABASE_URL: jdbc:postgresql://db:5432/kiungo
+      DATABASE_USERNAME: kiungo
+      DATABASE_PASSWORD: ${DB_PASSWORD}
+      APP_BASE_URL: https://${SHORT_DOMAIN}
+      APP_FRONTEND_URL: https://${APP_DOMAIN}
+      APP_CORS_ORIGINS: https://${APP_DOMAIN}
+      JWT_SECRET: ${JWT_SECRET}
+      IP_HASH_SALT: ${IP_HASH_SALT}
+      BILLING_MODE: ${BILLING_MODE:-mock}
+
+  frontend:
+    build: ../frontend
+    restart: unless-stopped
+    depends_on: [backend]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+      SHORT_DOMAIN: ${SHORT_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+
+volumes:
+  pgdata:
+  caddy_data:

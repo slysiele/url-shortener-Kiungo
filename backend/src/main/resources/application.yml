@@ -1,0 +1,73 @@
+spring:
+  application:
+    name: kiungo
+  profiles:
+    default: dev
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  servlet:
+    multipart:
+      max-file-size: 5MB
+
+server:
+  port: ${PORT:8080}
+  forward-headers-strategy: framework
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+app:
+  # Public base URL of short links, e.g. https://kiun.go  (no trailing slash)
+  base-url: ${APP_BASE_URL:http://localhost:8080}
+  # Where the Angular app lives (used for "link not found" pages and CORS)
+  frontend-url: ${APP_FRONTEND_URL:http://localhost:4200}
+  cors-allowed-origins: ${APP_CORS_ORIGINS:http://localhost:4200}
+  jwt:
+    # MUST be overridden in production with a long random value (>= 32 chars)
+    secret: ${JWT_SECRET:dev-only-secret-change-me-please-0123456789abcdef}
+    ttl-hours: 24
+  trial-days: 14
+  # Salt used to hash visitor IPs (we never store raw IPs)
+  ip-hash-salt: ${IP_HASH_SALT:dev-salt}
+  billing:
+    # mock = upgrades apply instantly (dev only). paystack / stripe are wired in Phase 3.
+    mode: ${BILLING_MODE:mock}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:file:./data/kiungo;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+app:
+  seed-demo: true
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/kiungo}
+    username: ${DATABASE_USERNAME:kiungo}
+    password: ${DATABASE_PASSWORD:kiungo}

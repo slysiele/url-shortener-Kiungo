@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "anthropic.claude-code",
+    "angular.ng-template",
+    "vscjava.vscode-java-pack",
+    "vmware.vscode-spring-boot"
+  ]
+}
